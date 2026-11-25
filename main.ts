@@ -1,20 +1,20 @@
-// Entry program for make.fun competition news-image-20261124.
+// Entry program for the make.fun news-image-20261124 competition.
 //
-// The image (entry.png) is drawn by draw.py in this repository. The entry
-// ships as text files, so the PNG bytes travel as base64 in entry.png.b64
-// (a single line); this program decodes them and writes the image to the
-// path the grader reads. Base64 decoding is deterministic, so both graded
-// runs write exactly the same bytes.
+// draw.py in this repository draws the image. The entry ships as text
+// files, so the PNG bytes travel as base64 in entry.png.b64 (one long
+// line); this program decodes that file and writes the image where the
+// grader looks for it. Decoding base64 is deterministic, so the two
+// graded runs produce byte-identical files.
 //
-// Runs on Node 22 with the standard library only: no network, no
-// dependencies, nothing outside this repository.
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+// Node 22, standard library only. No network, no dependencies, and
+// nothing is read from outside this repository.
 import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
-const repoRoot = dirname(fileURLToPath(import.meta.url));
-const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
+const here = dirname(fileURLToPath(import.meta.url));
+const dest = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
 
-const encoded = readFileSync(join(repoRoot, "entry.png.b64"), "utf8").trim();
-mkdirSync(outDir, { recursive: true });
-writeFileSync(join(outDir, "entry.png"), Buffer.from(encoded, "base64"));
+const payload = readFileSync(join(here, "entry.png.b64"), "utf8").trim();
+mkdirSync(dest, { recursive: true });
+writeFileSync(join(dest, "entry.png"), Buffer.from(payload, "base64"));
